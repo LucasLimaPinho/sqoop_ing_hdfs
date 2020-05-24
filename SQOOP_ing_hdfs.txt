@@ -1,0 +1,35 @@
+/* Ingestão de dados para Ecossistema Hadoop (HDFS) utilizando SQOOP.
+/* Importando dados relacionais do PostgreSQL 11 
+
+sudo -u postgres psql
+alter user postgres PASSWORD '123456';
+/q /* Sair do postgres
+
+/* Alterar arquivo de conexão do Postgres para permitir conexão remota do SQOOP
+
+sudo vi /var/lib/pgsql/11/data/pg_hba.conf
+
+/* Inserir host all all 0.0.0.0/0 md5 para conexão com SQOOP
+
+sudo service postgresql-11 stop
+sudo service postgresql-11 start
+
+/* Baixar drive JDBC Postgres SQOOP
+
+cd /home/cloudera/Downloads
+
+wget http://jdbc.postgresql.org/download/postgresql-9.2-1002.jdbc4.jar
+ls /var/lib/sqoop
+sudo cp postgresql-9.2-1002.jdbc4.jar /var/lib/sqoop
+
+/* Comandos SQOOP para banco de dados relacional ed
+
+sqoop list-databases --connect jdbc:postgresql://127.0.0.1/ --username postgres --password 123456
+sqoop list-tables --connect jdbc:postgresql://127.0.0.1/ed --username postgres --password 123456 -- --schema relacional
+sqoop import-all-tables --connect jdbc:postgresql://127.0.0.1/ed --username postgres --password 123456 -- --schema relacional
+
+/* Visualização dos dados importados no Ecossistema Hadoop
+
+hdfs dfs -ls /user/cloudera
+hdfs dfs -ls /user/cloudera/itensvenda
+sudo hdfs dfs -cat /user/cloudera/itensvenda/part-m-00000
